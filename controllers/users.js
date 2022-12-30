@@ -4,7 +4,7 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((newUser) => res.send(newUser))
+    .then((newUser) => res.status(200).send(newUser))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
@@ -25,6 +25,10 @@ const readUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFound') {
         return res.status(404).send({ message: err.message });
+      }
+
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные при поиске пользователя.' });
       }
 
       return res.status(500).send({ message: 'Произошла неизвестная ошибка, проверьте корректность запроса' });
