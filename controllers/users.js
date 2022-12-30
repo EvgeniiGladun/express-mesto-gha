@@ -91,7 +91,7 @@ const updateAvatar = (req, res) => {
     .then((newAvatar) => res.send(newAvatar))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+        return res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       }
 
       if (err.name === 'CastError') {
