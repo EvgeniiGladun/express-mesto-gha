@@ -43,15 +43,16 @@ const deleteCard = (req, res) => {
 const readCards = (req, res) => {
   Card.find({})
     .populate('owner')
-    .orFail(() => {
-      const error = new Error('Ни одной карточки, не нашлось');
-      error.name = 'NotFound';
-      throw error;
+    .then((card) => {
+      if (card.length === 0) {
+        res.status(404).send(card);
+      } else {
+        res.status(200).send(card);
+      }
     })
-    .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'NotFound') {
-        return res.status(404).send({ message: err.message });
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные для получения карточек.' });
       }
 
       return res.status(500).send({ message: 'Произошла неизвестная ошибка, проверьте корректность запроса' });
