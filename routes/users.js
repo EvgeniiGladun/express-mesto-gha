@@ -7,13 +7,13 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-users.get('/users/:userId', readUser);
-users.get('/users', readUsers);
+users.get('/:userId', readUser);
+users.get('/', readUsers);
 
-users.post('/users', createUser);
+users.post('/', createUser);
 
-users.patch('/users/me', updateProfile);
-users.patch('/users/me/avatar', updateAvatar);
+users.patch('/me', updateProfile);
+users.patch('/me/avatar', updateAvatar);
 
 // Экспортируем "роутер"
 module.exports = users;

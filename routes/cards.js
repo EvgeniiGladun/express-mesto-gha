@@ -7,14 +7,14 @@ const {
   deleteIsLike,
 } = require('../controllers/cards');
 
-card.post('/cards', createCard);
+card.post('/', createCard);
 
-card.delete('/cards/:cardId', deleteCard);
+card.delete('/:cardId', deleteCard);
 
-card.get('/cards', readCards);
+card.get('/', readCards);
 
-card.put('/cards/:cardId/likes', createIsLike);
-card.delete('/cards/:cardId/likes', deleteIsLike);
+card.put('/:cardId/likes', createIsLike);
+card.delete('/:cardId/likes', deleteIsLike);
 
 // Экспортируем "роутер"
 module.exports = card;
