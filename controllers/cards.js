@@ -3,7 +3,7 @@ const Card = require('../models/card');
 const createCard = (req, res) => {
   const { name, link, owner } = req.body;
 
-  Card.create({ name, link, owner })
+  Card.create({ name, link, owner }, { new: true, runValidators: true })
     .then((newCard) => res.send(newCard))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -42,7 +42,15 @@ const readCards = (req, res) => {
 };
 
 const createIsLike = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    {
+      $addToSet: { likes: req.user._id },
+    },
+    {
+      new: true, runValidators: true,
+    },
+  )
     .orFail(() => {
       const error = new Error(`Передан несуществующий _id [${req.params.cardId}] карточки.`);
       error.name = 'NotFound';
@@ -63,7 +71,13 @@ const createIsLike = (req, res) => {
 };
 
 const deleteIsLike = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    {
+      $pull: { likes: req.user._id },
+    },
+    { new: true, runValidators: true },
+  )
     .orFail(() => {
       const error = new Error(`Передан несуществующий _id [${req.params.cardId}] карточки.`);
       error.name = 'NotFound';

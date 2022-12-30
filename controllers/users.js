@@ -51,7 +51,7 @@ const readUsers = (req, res) => {
 const updateProfile = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(() => {
       const error = new Error(`Пользователь по указанному _id [${req.user._id}] не найден.`);
       error.name = 'NotFound';
@@ -59,6 +59,10 @@ const updateProfile = (req, res) => {
     })
     .then((updateUser) => res.send(updateUser))
     .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+      }
+
       if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       }
@@ -74,7 +78,7 @@ const updateProfile = (req, res) => {
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .orFail(() => {
       const error = new Error(`Пользователь по указанному _id [${req.user._id}] не найден.`);
       error.name = 'NotFound';
@@ -82,6 +86,10 @@ const updateAvatar = (req, res) => {
     })
     .then((newAvatar) => res.send(newAvatar))
     .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+      }
+
       if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       }
