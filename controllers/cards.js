@@ -1,8 +1,9 @@
 const Card = require('../models/card');
 
+const Forbidden = require('../errors/Forbidden');
 const BadRequest = require('../errors/BadRequest');
-const NotFoundError = require('../errors/NotFoundError');
 const Unauthorized = require('../errors/Unauthorized');
+const NotFoundError = require('../errors/NotFoundError');
 
 const {
   OK,
@@ -44,7 +45,7 @@ const deleteCard = (req, res, next) => {
 
       // Проверяем на статус владельца
       if (userId !== ownerId) {
-        return next(new Unauthorized(UNAUTHORIZED_CARD));
+        return next(new Forbidden(UNAUTHORIZED_CARD));
       }
 
       return Card.findByIdAndRemove(req.params.cardId)
@@ -54,7 +55,7 @@ const deleteCard = (req, res, next) => {
         .then(() => res.status(OK).send({ message: OK_CARD_DELETE }))
         .catch((err) => {
           if (err.name === 'CastError') {
-            return next(new BadRequest(BAD_REQUEST_CARD_DELETE));
+            return next(new Unauthorized(BAD_REQUEST_CARD_DELETE));
           }
 
           if (err.name === 'NotFound') {

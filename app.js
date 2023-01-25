@@ -50,8 +50,8 @@ app.use('/users', celebrate({
 }), users);
 app.use('/cards', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string(),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().required(),
   }),
 }), cards);
 
@@ -74,6 +74,8 @@ app.use((err, req, res, next) => {
         ? INTERNAL_SERVER_ERROR_MESSAGE
         : message,
     });
+
+  next();
 });
 
 app.listen(PORT, () => {
