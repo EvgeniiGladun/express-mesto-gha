@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
+const Conflict = require('../errors/Conflict');
 const BadRequest = require('../errors/BadRequest');
 const NotFoundError = require('../errors/NotFoundError');
-const Conflict = require('../errors/Conflict');
 
 const {
   OK,
@@ -69,18 +69,12 @@ const createUser = (req, res, next) => {
 const readUser = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      const error = new Error(NOT_FOUND_USERID);
-      error.name = 'NotFound';
-      throw error;
+      throw next(new NotFoundError(NOT_FOUND_USERID));
     })
-    .then((user) => res.send(user))
+    .then((user) => res.status(OK).send(user))
     .catch((err) => {
-      if (err.name === 'NotFound') {
-        return next(new NotFoundError(NOT_FOUND_USERID));
-      }
-
       if (err.name === 'CastError') {
-        return next(new BadRequest(BAD_REQUEST_SEARCH_USER));
+        return next(new NotFoundError(BAD_REQUEST_SEARCH_USER));
       }
 
       return next;
@@ -102,9 +96,7 @@ const readUsers = (req, res, next) => {
 const readMeProfile = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => {
-      const error = new Error(NOT_FOUND_USERID);
-      error.name = 'NotFound';
-      throw error;
+      throw next(new NotFoundError(NOT_FOUND_USERID));
     })
     .then((user) => res.send(user))
     .catch((err) => {
@@ -125,11 +117,9 @@ const updateProfile = (req, res, next) => {
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(() => {
-      const error = new Error(NOT_FOUND_USERID);
-      error.name = 'NotFound';
-      throw error;
+      throw next(new NotFoundError(NOT_FOUND_USERID));
     })
-    .then((updateUser) => res.send(updateUser))
+    .then((updateUser) => res.status(OK).send(updateUser))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequest(BAD_REQUEST_CREATE_USER));
@@ -148,11 +138,9 @@ const updateAvatar = (req, res, next) => {
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .orFail(() => {
-      const error = new Error(NOT_FOUND_USERID);
-      error.name = 'NotFound';
-      throw error;
+      throw next(new NotFoundError(NOT_FOUND_USERID));
     })
-    .then((newAvatar) => res.send(newAvatar))
+    .then((newAvatar) => res.status(OK).send(newAvatar))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequest(BAD_REQUEST_UPDATE_AVATAR));
