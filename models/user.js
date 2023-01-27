@@ -5,20 +5,6 @@ const { NOT_FOUND_USER } = require('../constants');
 const Unauthorized = require('../errors/Unauthorized');
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
-  about: {
-    type: String,
-  },
-  avatar: {
-    type: String,
-    validate(link) {
-      const reg = /https?:\W+/;
-      return reg.test(link);
-    },
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-  },
   email: {
     type: String,
     unique: true,

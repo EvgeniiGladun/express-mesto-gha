@@ -1,4 +1,7 @@
+const RegExp = /https?:\W+/;
+const { Joi, celebrate, errors } = require('celebrate');
 const card = require('express').Router();
+
 const {
   createCard,
   deleteCard,
@@ -7,7 +10,12 @@ const {
   deleteIsLike,
 } = require('../controllers/cards');
 
-card.post('/', createCard);
+card.post('/', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().required().pattern(RegExp),
+  }),
+}), createCard);
 
 card.delete('/:cardId', deleteCard);
 
@@ -15,6 +23,9 @@ card.get('/', readCards);
 
 card.put('/:cardId/likes', createIsLike);
 card.delete('/:cardId/likes', deleteIsLike);
+
+// Обработка ошибок модуля 'Joi'
+card.use(errors());
 
 // Экспортируем "роутер"
 module.exports = card;
