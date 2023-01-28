@@ -51,8 +51,14 @@ const createUser = (req, res, next) => {
       avatar,
       email,
       password: passHash,
-    }))
-    .then((newUser) => res.status(OK).send(newUser))
+    })
+      .then((newUser) => res.status(OK).send({
+        _id: newUser._id,
+        name,
+        about,
+        avatar,
+        email,
+      })))
     .catch((err) => {
       if (err.code === 11000) {
         return next(new Conflict(CONFLICT_EMAIL));
@@ -83,7 +89,10 @@ const readUser = (req, res, next) => {
 
 const readUsers = (req, res, next) => {
   User.find({})
-    .then((usersStack) => res.send(usersStack))
+    .then((usersStack) => {
+      console.log(usersStack)
+      res.send(usersStack)
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequest(BAD_REQUEST_CREATE_USER));
