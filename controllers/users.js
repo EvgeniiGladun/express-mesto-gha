@@ -89,10 +89,7 @@ const readUser = (req, res, next) => {
 
 const readUsers = (req, res, next) => {
   User.find({})
-    .then((usersStack) => {
-      console.log(usersStack)
-      res.send(usersStack)
-    })
+    .then((usersStack) => res.send(usersStack))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequest(BAD_REQUEST_CREATE_USER));
