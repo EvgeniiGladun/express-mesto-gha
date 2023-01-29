@@ -12,7 +12,11 @@ const {
 
 users.get('/', readUsers);
 users.get('/me', readMeProfile);
-users.get('/:userId', readUser);
+users.get('/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex(),
+  }),
+}), readUser);
 
 users.patch('/me', celebrate({
   body: Joi.object().keys({

@@ -31,6 +31,7 @@ const login = (req, res, next) => {
       // Отправка кука пользователю с ключем
       return res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).send({
         message: SUCCESSFUL_COOKIE,
+        isToken: token,
       });
     }).catch(next);
 };

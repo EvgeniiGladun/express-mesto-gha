@@ -15,6 +15,7 @@ const {
   BAD_REQUEST_CARD_DELETE,
   BAD_REQUEST_CARD_GET,
   BAD_REQUEST_PUT_LIKE,
+  BAD_REQUEST_DEL_LIKE,
   UNAUTHORIZED_CARD,
 } = require('../constants');
 
@@ -122,7 +123,7 @@ const deleteIsLike = (req, res, next) => {
     .then((removedLikeCard) => res.send(removedLikeCard))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(BadRequest(BAD_REQUEST_PUT_LIKE));
+        return next(new BadRequest(BAD_REQUEST_DEL_LIKE));
       }
 
       if (err.name === 'NotFound') {

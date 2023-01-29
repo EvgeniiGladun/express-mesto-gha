@@ -17,12 +17,25 @@ card.post('/', celebrate({
   }),
 }), createCard);
 
-card.delete('/:cardId', deleteCard);
+card.delete('/:cardId', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().required().pattern(RegExp),
+  }),
+}), deleteCard);
 
 card.get('/', readCards);
 
-card.put('/:cardId/likes', createIsLike);
-card.delete('/:cardId/likes', deleteIsLike);
+card.put('/:cardId/likes', celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().length(24).hex(),
+  }),
+}), createIsLike);
+card.delete('/:cardId/likes', celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().length(24).hex(),
+  }),
+}), deleteIsLike);
 
 // Обработка ошибок модуля 'Joi'
 card.use(errors());

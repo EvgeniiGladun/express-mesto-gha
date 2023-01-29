@@ -52,7 +52,7 @@ app.post('/signup', celebrate({
       .pattern(RegExps),
     email: Joi.string().required().email(),
     password: Joi.string().min(8).required(),
-  }),
+  }).unknown(true),
 }), createUser);
 
 app.use(auth);
