@@ -5,6 +5,15 @@ const { NOT_FOUND_USER } = require('../constants');
 const Unauthorized = require('../errors/Unauthorized');
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+  about: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+  },
   email: {
     type: String,
     unique: true,

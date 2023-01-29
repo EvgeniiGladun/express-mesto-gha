@@ -68,22 +68,22 @@ const createUser = (req, res, next) => {
         return next(new BadRequest(BAD_REQUEST_CREATE_USER));
       }
 
-      return next;
+      return next(err);
     });
 };
 
 const readUser = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      throw next(new NotFoundError(NOT_FOUND_USERID));
+      throw new NotFoundError(NOT_FOUND_USERID);
     })
     .then((user) => res.status(OK).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new NotFoundError(BAD_REQUEST_SEARCH_USER));
+        return next(new BadRequest(BAD_REQUEST_SEARCH_USER));
       }
 
-      return next;
+      return next(err);
     });
 };
 
@@ -95,7 +95,7 @@ const readUsers = (req, res, next) => {
         return next(new BadRequest(BAD_REQUEST_CREATE_USER));
       }
 
-      return next;
+      return next(err);
     });
 };
 
@@ -114,7 +114,7 @@ const readMeProfile = (req, res, next) => {
         return next(new BadRequest(BAD_REQUEST_SEARCH_USER));
       }
 
-      return next;
+      return next(err);
     });
 };
 
@@ -135,7 +135,7 @@ const updateProfile = (req, res, next) => {
         return next(new NotFoundError(NOT_FOUND_USERID));
       }
 
-      return next;
+      return next(err);
     });
 };
 
@@ -156,7 +156,7 @@ const updateAvatar = (req, res, next) => {
         return next(new NotFoundError(NOT_FOUND_USERID));
       }
 
-      return next;
+      return next(err);
     });
 };
 

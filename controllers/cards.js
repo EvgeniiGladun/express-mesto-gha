@@ -28,7 +28,7 @@ const createCard = (req, res, next) => {
         return next(new BadRequest(BAD_REQUEST_MESSAGE));
       }
 
-      return next;
+      return next(err);
     });
 };
 
@@ -62,7 +62,7 @@ const deleteCard = (req, res, next) => {
             return next(new NotFoundError(NOT_FOUND_CARDID));
           }
 
-          return next;
+          return next(err);
         });
     });
 };
@@ -78,7 +78,7 @@ const readCards = (req, res, next) => {
         return next(new BadRequest(BAD_REQUEST_CARD_GET));
       }
 
-      return next;
+      return next(err);
     });
 };
 
@@ -104,7 +104,7 @@ const createIsLike = (req, res, next) => {
         return next(new NotFoundError(NOT_FOUND_CARD_MESSAGE));
       }
 
-      return next;
+      return next(err);
     });
 };
 
@@ -129,7 +129,7 @@ const deleteIsLike = (req, res, next) => {
         return next(new NotFoundError(NOT_FOUND_CARD_MESSAGE));
       }
 
-      return next;
+      return next(err);
     });
 };
 

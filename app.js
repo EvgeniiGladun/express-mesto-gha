@@ -1,4 +1,4 @@
-const RegExps = /https?:\/\//;
+const RegExps = /https?:\/\/\w+\b#?/;
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -79,7 +79,7 @@ app.use((err, req, res, next) => {
         : message,
     });
 
-  next();
+  return next();
 });
 
 app.listen(PORT, () => {
