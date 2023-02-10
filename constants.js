@@ -1,3 +1,11 @@
+// Массив доменов, с которых разрешены кросс-доменные запросы
+const allowedCors = [
+  'https://photograms.nomoredomainsclub.ru',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3500',
+];
+
 // Коды ошибок
 const OK = 200;
 const CREATED = 201;
@@ -49,4 +57,5 @@ module.exports = {
   UNAUTHORIZED_CARD,
   CONFLICT_EMAIL,
   INTERNAL_SERVER_ERROR_MESSAGE,
+  allowedCors,
 };

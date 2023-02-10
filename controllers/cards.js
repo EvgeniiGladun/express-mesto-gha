@@ -91,10 +91,10 @@ const createIsLike = (req, res, next) => {
     },
     { new: true },
   )
-    .populate('owner')
     .orFail(() => {
       throw new NotFoundError(NOT_FOUND_CARDID);
     })
+    .populate(['owner', 'likes'])
     .then((putLikeCard) => res.status(OK).send(putLikeCard))
     .catch((err) => {
       if (err.name === 'CastError') {

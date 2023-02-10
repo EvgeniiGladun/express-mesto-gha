@@ -1,7 +1,8 @@
-require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+
+const { JWT_SECRET } = require('../middlewares/auth');
 
 const Conflict = require('../errors/Conflict');
 const BadRequest = require('../errors/BadRequest');
@@ -26,14 +27,26 @@ const login = (req, res, next) => {
       bcrypt.compare(password, user.password);
 
       // Создание секретного jwt-токена
-      const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user.id }, JWT_SECRET, { expiresIn: '7d' });
 
+      res.cookie('tokenValid', 'true');
       // Отправка кука пользователю с ключем
       return res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).send({
         message: SUCCESSFUL_COOKIE,
-        isToken: token,
+        JWT: token,
       });
     }).catch(next);
+};
+
+const logOut = (req, res, next) => {
+  try {
+    res.cookie('tokenValid', 'false');
+    res.clearCookie('jwt').send({
+      message: 'Вышли из аккаунта',
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 const createUser = (req, res, next) => {
@@ -164,6 +177,7 @@ const updateAvatar = (req, res, next) => {
 // Экспорируем функций
 module.exports = {
   login,
+  logOut,
   createUser,
   readUser,
   readUsers,
