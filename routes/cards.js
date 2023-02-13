@@ -1,7 +1,7 @@
-const RegExp = /https?:\/\//;
 const { Joi, celebrate, errors } = require('celebrate');
 const card = require('express').Router();
 
+const { RegExpUrl } = require('../constants');
 const {
   createCard,
   deleteCard,
@@ -13,7 +13,7 @@ const {
 card.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().required().pattern(RegExp),
+    link: Joi.string().required().pattern(RegExpUrl),
   }),
 }), createCard);
 

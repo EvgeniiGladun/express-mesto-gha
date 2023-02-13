@@ -7,16 +7,13 @@ const { NOT_FOUND_USER } = require('../constants');
 const Unauthorized = require('../errors/Unauthorized');
 
 const auth = (req, res, next) => {
-  const { authorization } = req.headers;
   const JWT = req.cookies.jwt;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    if (!JWT) {
-      throw next(new Unauthorized(NOT_FOUND_USER));
-    }
+  if (!JWT) {
+    throw next(new Unauthorized(NOT_FOUND_USER));
   }
 
-  const token = !authorization ? JWT : authorization.replace('Bearer ', '');
+  const token = JWT;
   let payload = '';
 
   try {

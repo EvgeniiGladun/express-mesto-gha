@@ -1,9 +1,9 @@
+const RegExpUrl = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w-]+)+[\w\-_~:/?#[\]@!$&'()*+,;=.]+$/;
+
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
   'https://photograms.nomoredomainsclub.ru',
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:3500',
+  'http://photograms.nomoredomainsclub.ru',
 ];
 
 // Коды ошибок
@@ -58,4 +58,5 @@ module.exports = {
   CONFLICT_EMAIL,
   INTERNAL_SERVER_ERROR_MESSAGE,
   allowedCors,
+  RegExpUrl,
 };

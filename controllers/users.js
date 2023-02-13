@@ -29,9 +29,8 @@ const login = (req, res, next) => {
       // Создание секретного jwt-токена
       const token = jwt.sign({ _id: user.id }, JWT_SECRET, { expiresIn: '7d' });
 
-      res.cookie('tokenValid', 'true');
       // Отправка кука пользователю с ключем
-      return res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).send({
+      return res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, Secure: true }).send({
         message: SUCCESSFUL_COOKIE,
         JWT: token,
       });
@@ -40,7 +39,6 @@ const login = (req, res, next) => {
 
 const logOut = (req, res, next) => {
   try {
-    res.cookie('tokenValid', 'false');
     res.clearCookie('jwt').send({
       message: 'Вышли из аккаунта',
     });
@@ -120,10 +118,6 @@ const readMeProfile = (req, res, next) => {
     })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'NotFound') {
-        return next(new NotFoundError(NOT_FOUND_USERID));
-      }
-
       if (err.name === 'CastError') {
         return next(new BadRequest(BAD_REQUEST_SEARCH_USER));
       }
@@ -145,10 +139,6 @@ const updateProfile = (req, res, next) => {
         return next(new BadRequest(BAD_REQUEST_CREATE_USER));
       }
 
-      if (err.name === 'NotFound') {
-        return next(new NotFoundError(NOT_FOUND_USERID));
-      }
-
       return next(err);
     });
 };
@@ -164,10 +154,6 @@ const updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequest(BAD_REQUEST_UPDATE_AVATAR));
-      }
-
-      if (err.name === 'NotFound') {
-        return next(new NotFoundError(NOT_FOUND_USERID));
       }
 
       return next(err);

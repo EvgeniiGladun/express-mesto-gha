@@ -1,15 +1,19 @@
 const mongoose = require('mongoose');
+const { RegExpUrl } = require('../constants');
 
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
+    min: 2,
+    max: 30,
+    require: true,
   },
   link: {
     type: String,
     validate(link) {
-      const reg = /https?:\W+/;
-      return reg.test(link);
+      return RegExpUrl.test(link);
     },
+    require: true,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

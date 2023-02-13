@@ -1,18 +1,29 @@
 const validator = require('validator');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { NOT_FOUND_USER } = require('../constants');
+const { NOT_FOUND_USER, RegExpUrl } = require('../constants');
 const Unauthorized = require('../errors/Unauthorized');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    min: 2,
+    max: 30,
+    default: 'Жак-Ив Кусто',
+
   },
   about: {
     type: String,
+    min: 2,
+    max: 30,
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
+    validate(link) {
+      return RegExpUrl.test(link);
+    },
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
     type: String,
@@ -24,6 +35,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     select: false,
+    required: true,
   },
 });
 

@@ -1,6 +1,6 @@
-const RegExp = /https?:\W+/;
-const users = require('express').Router();
 const { Joi, celebrate, errors } = require('celebrate');
+const users = require('express').Router();
+const { RegExpUrl } = require('../constants');
 
 const {
   readUser,
@@ -26,7 +26,7 @@ users.patch('/me', celebrate({
 }), updateProfile);
 users.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(RegExp),
+    avatar: Joi.string().pattern(RegExpUrl),
   }),
 }), updateAvatar);
 

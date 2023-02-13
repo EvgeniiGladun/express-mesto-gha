@@ -13,7 +13,6 @@ const {
   NOT_FOUND_CARDID,
   BAD_REQUEST_MESSAGE,
   BAD_REQUEST_CARD_DELETE,
-  BAD_REQUEST_CARD_GET,
   BAD_REQUEST_PUT_LIKE,
   BAD_REQUEST_DEL_LIKE,
   UNAUTHORIZED_CARD,
@@ -59,13 +58,10 @@ const deleteCard = (req, res, next) => {
             return next(new Unauthorized(BAD_REQUEST_CARD_DELETE));
           }
 
-          if (err.name === 'NotFound') {
-            return next(new NotFoundError(NOT_FOUND_CARDID));
-          }
-
           return next(err);
         });
-    });
+    })
+    .catch(next);
 };
 
 const readCards = (req, res, next) => {
@@ -74,13 +70,7 @@ const readCards = (req, res, next) => {
     .then((card) => {
       res.status(OK).send(card);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new BadRequest(BAD_REQUEST_CARD_GET));
-      }
-
-      return next(err);
-    });
+    .catch(next);
 };
 
 const createIsLike = (req, res, next) => {
@@ -99,10 +89,6 @@ const createIsLike = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequest(BAD_REQUEST_PUT_LIKE));
-      }
-
-      if (err.name === 'NotFound') {
-        return next(new NotFoundError(NOT_FOUND_CARD_MESSAGE));
       }
 
       return next(err);
@@ -124,10 +110,6 @@ const deleteIsLike = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequest(BAD_REQUEST_DEL_LIKE));
-      }
-
-      if (err.name === 'NotFound') {
-        return next(new NotFoundError(NOT_FOUND_CARD_MESSAGE));
       }
 
       return next(err);
